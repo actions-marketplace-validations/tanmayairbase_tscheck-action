@@ -525,7 +525,6 @@ const fs = __nccwpck_require__(747)
 
 async function run() {
   const TSNOCHECK_COUNT = Number(core.getInput("TSNOCHECK_COUNT"))
-  console.log('-----TSNOCHECK_COUNT is: ', TSNOCHECK_COUNT);
 
   exec(
     "find ./src -type f -name \\*.ts -o -name \\*.tsx | grep -v 'test\\|coverage\\|stories\\|scripts'",
@@ -544,8 +543,9 @@ async function run() {
           if (data.includes("ts-nocheck")) {
             exec(`wc -l ${fn}`, () => {
               failCount = failCount + 1;
-              if (failCount >= TSNOCHECK_COUNT) {
-                console.log('-----failCount is: ', failCount);
+              if (failCount > TSNOCHECK_COUNT) {
+                console.log(`COUNT THRESHOLD: ${TSNOCHECK_COUNT}`);
+                console.log(`COUNT IN THIS PULL REQUEST: ${failCount}`);
                 throw new Error(
                   "Oh no! New @ts-nocheck instance(s) got introduced :( Could you please remove them? Thanks!"
                 )
