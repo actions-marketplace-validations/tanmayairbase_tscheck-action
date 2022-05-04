@@ -5,6 +5,7 @@ const fs = require("fs")
 
 async function run() {
   const TSNOCHECK_COUNT = Number(core.getInput("TSNOCHECK_COUNT"))
+  console.log('-----TSNOCHECK_COUNT is: ', TSNOCHECK_COUNT);
 
   exec(
     "find ./src -type f -name \\*.ts -o -name \\*.tsx | grep -v 'test\\|coverage\\|stories\\|scripts'",
@@ -21,9 +22,10 @@ async function run() {
         .forEach((fn) => {
           const data = fs.readFileSync(fn);
           if (data.includes("ts-nocheck")) {
-            exec(`wc -l ${fn}`, (err, stdout2) => {
+            exec(`wc -l ${fn}`, () => {
               failCount = failCount + 1;
               if (failCount >= TSNOCHECK_COUNT) {
+                console.log('-----failCount is: ', failCount);
                 throw new Error(
                   "Oh no! New @ts-nocheck instance(s) got introduced :( Could you please remove them? Thanks!"
                 )
