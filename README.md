@@ -1,9 +1,9 @@
-# TS Check action
+# No more `@ts-nocheck`
 
-Check for counts of `@ts-nocheck` in your code repo
+Counts the number of @ts-nocheck occrrences in code and limits them
 
 ## Getting Started
-
+* Accepts a single param, `TSNOCHECK_COUNT`, for the number of `@ts-nocheck`s you want to keep in your repository (optional, defaults to `0`)
 * Add a new GitHub Action workflow:
 ```
 name: TS Check

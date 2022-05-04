@@ -1,4 +1,4 @@
-name: 'No more `@ts-nocheck`s'
+name: 'No more @ts-nocheck'
 description: 'Counts the number of @ts-nocheck occrrences in code and limits them'
 author: 'Tanmay <tanmay.rajani@airbase.io>'
 
