@@ -1,24 +1,22 @@
-# Thank You Action
+# TS Check action
 
-Say thanks any time someone makes a new Pull Request on your repository!
+Check for counts of `@ts-nocheck` in your code repo
 
 ## Getting Started
-* Create a [Tenor API](https://tenor.com/gifapi/documentation) key and set it as a [Secret](https://docs.github.com/en/actions/reference/encrypted-secrets) on your GitHub repo
+
 * Add a new GitHub Action workflow:
 ```
-name: Thank You
+name: TS Check
 
 on:
-  pull_request:
-    types: [opened]
+  pull_request
 
 jobs:
   thanks:
     runs-on: ubuntu-latest
     steps:
-      - uses: colbyfayock/thank-you-action@master
+      - uses: tanmayairbase/tscheck-action@main
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          TENOR_TOKEN: ${{secrets.TENOR_TOKEN}}
+          TSNOCHECK_COUNT: ${{secrets.TSNOCHECK_COUNT}}
 ```
 * You're welcome!
