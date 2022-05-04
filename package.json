@@ -1,5 +1,5 @@
 {
-  "name": "demo-action-pull-request",
+  "name": "tscheck-action",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,20 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/colbyfayock/demo-action-pull-request.git"
+    "url": "git+https://github.com/tanmayairbase/tscheck-action.git"
   },
-  "author": "Colby Fayock <hello@colbyfayock.com>",
+  "author": "Tanmay <tanmay.rajani@airbase.io>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/colbyfayock/demo-action-pull-request/issues"
+    "url": "https://github.com/tanmayairbase/tscheck-action/issues"
   },
-  "homepage": "https://github.com/colbyfayock/demo-action-pull-request#readme",
+  "homepage": "https://github.com/tanmayairbase/tscheck-action#readme",
   "dependencies": {},
   "devDependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
     "@vercel/ncc": "^0.27.0",
-    "dotenv": "^8.2.0",
-    "node-fetch": "^2.6.1"
+    "dotenv": "^8.2.0"
   }
 }

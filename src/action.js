@@ -1,49 +1,38 @@
-require('dotenv').config();
-const fetch = require('node-fetch');
-const core = require('@actions/core');
-const github = require('@actions/github');
+require("dotenv").config()
+const core = require("@actions/core")
+const { exec } = require("child_process")
+const fs = require("fs")
 
 async function run() {
-  const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-  const TENOR_TOKEN = core.getInput('TENOR_TOKEN') || process.env.TENOR_TOKEN;
-  const message = core.getInput('message') || 'Thank you!';
-  const searchTerm = core.getInput('searchTerm') || 'thank you';
+  const TSNOCHECK_COUNT = Number(core.getInput("TSNOCHECK_COUNT"))
 
-  if ( typeof TENOR_TOKEN !== 'string' ) {
-    throw new Error('Invalid TENOR_TOKEN: did you forget to set it in your action config?');
-  }
+  exec(
+    "find ./src -type f -name \\*.ts -o -name \\*.tsx | grep -v 'test\\|coverage\\|stories\\|scripts'",
+    (err, stdout) => {
+      if (err) {
+        return;
+      }
 
-  if ( typeof GITHUB_TOKEN !== 'string' ) {
-    throw new Error('Invalid GITHUB_TOKEN: did you forget to set it in your action config?');
-  }
+      let failCount = 0
 
-  const randomPos = Math.round(Math.random() * 1000);
-  const url = `https://api.tenor.com/v1/search?q=${encodeURIComponent(searchTerm)}&pos=${randomPos}&limit=1&media_filter=minimal&contentfilter=high`
-
-  console.log(`Searching Tenor: ${url}`)
-
-  const response = await fetch(`${url}&key=${TENOR_TOKEN}`);
-  const { results } = await response.json();
-  const gifUrl = results[0].media[0].tinygif.url;
-
-  console.log(`Found gif from Tenor: ${gifUrl}`);
-
-  const { context = {} } = github;
-  const { pull_request } = context.payload;
-
-  if ( !pull_request ) {
-    throw new Error('Could not find pull request!')
-  };
-
-  console.log(`Found pull request: ${pull_request.number}`);
-
-  const octokit = github.getOctokit(GITHUB_TOKEN)
-
-  await octokit.issues.createComment({
-    ...context.repo,
-    issue_number: pull_request.number,
-    body: `${message}\n\n<img src="${gifUrl}" alt="${searchTerm}" />`
-  });
+      stdout
+        .split("\n")
+        .filter(Boolean)
+        .forEach((fn) => {
+          const data = fs.readFileSync(fn);
+          if (data.includes("ts-nocheck")) {
+            exec(`wc -l ${fn}`, (err, stdout2) => {
+              failCount = failCount + 1;
+              if (failCount >= TSNOCHECK_COUNT) {
+                throw new Error(
+                  "Oh no! New @ts-nocheck instance(s) got introduced :( Could you please remove them? Thanks!"
+                )
+              }
+            })
+          }
+        })
+    }
+  )
 }
 
-run().catch(e => core.setFailed(e.message));
+run().catch((e) => core.setFailed(e.message));
