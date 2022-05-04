@@ -520,17 +520,17 @@ module.exports.parse = parse
 
 __nccwpck_require__(437).config()
 const core = __nccwpck_require__(186)
-const { exec } = __nccwpck_require__(129)
+const exec = __nccwpck_require__(129).exec
 const fs = __nccwpck_require__(747)
 
 async function run() {
-  const TSNOCHECK_COUNT = Number(core.getInput("TSNOCHECK_COUNT"))
+  const TSNOCHECK_COUNT = Number(core.getInput("TSNOCHECK_COUNT")) || 0
 
   exec(
     "find ./src -type f -name \\*.ts -o -name \\*.tsx | grep -v 'test\\|coverage\\|stories\\|scripts'",
     (err, stdout) => {
       if (err) {
-        return;
+        return
       }
 
       let failCount = 0
@@ -538,16 +538,19 @@ async function run() {
       stdout
         .split("\n")
         .filter(Boolean)
-        .forEach((fn) => {
-          const data = fs.readFileSync(fn);
-          if (data.includes("ts-nocheck")) {
-            exec(`wc -l ${fn}`, () => {
-              failCount = failCount + 1;
+        .forEach((fileName) => {
+          const fileContent = fs.readFileSync(fileName)
+
+          if (fileContent.includes("ts-nocheck")) {
+            exec(`wc -l ${fileName}`, () => {
+              failCount = failCount + 1
+
               if (failCount > TSNOCHECK_COUNT) {
-                console.log(`COUNT THRESHOLD: ${TSNOCHECK_COUNT}`);
-                console.log(`COUNT IN THIS PULL REQUEST: ${failCount}`);
+                console.log(`COUNT THRESHOLD: ${TSNOCHECK_COUNT}`)
+                console.log(`COUNT IN THIS PULL REQUEST: ${failCount}`)
+
                 throw new Error(
-                  "Oh no! New @ts-nocheck instance(s) got introduced :( Could you please remove them? Thanks!"
+                  "Oh no! New @ts-nocheck instance(s) got introduced :( Please remove them."
                 )
               }
             })
@@ -557,7 +560,7 @@ async function run() {
   )
 }
 
-run().catch((e) => core.setFailed(e.message));
+run().catch((e) => core.setFailed(e.message))
 
 
 /***/ }),

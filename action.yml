@@ -1,12 +1,11 @@
-name: 'PR TS Check'
-description: 'Checks for @ts-nocheck in code'
+name: 'No more `@ts-nocheck`s'
+description: 'Counts the number of @ts-nocheck occrrences in code and limits them'
 author: 'Tanmay <tanmay.rajani@airbase.io>'
 
 inputs:
   TSNOCHECK_COUNT:
-    description: 'Number of @ts-nocheck the repo has right now'
-    required: true
+    description: '@ts-nocheck occrrences threshold for the repo'
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
